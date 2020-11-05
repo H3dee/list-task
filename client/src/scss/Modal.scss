@@ -1,0 +1,126 @@
+$padInsideMod: 15px 16px 16px;
+$baseBorder: 1px solid #ccc;
+
+%btn {
+  padding: 0 13px;
+  height: 36px;
+  border-radius: 3px;
+  font-size: 13px;
+  border: 1px solid transparent;
+  background-color: #7aa1bd;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  transition: background-color 0.05s ease-in;
+  &:hover {
+    background-color: #92b4cc;
+  }
+}
+
+%active {
+  opacity: 1;
+  z-index: 200;
+}
+%hidden {
+  opacity: 0;
+  z-index: -1;
+}
+
+.Modal {
+  &.open {
+    .Modal__overlay,
+    .Modal__window {
+      @extend %active;
+    }
+    .Modal__overlay {
+      background: rgba(0, 0, 0, 0.5);
+      .Modal__window {
+        transform: translateY(150px);
+      }
+    }
+  }
+  &.close {
+    .Modal__overlay,
+    .Modal__window {
+      @extend %hidden;
+    }
+    .Modal__overlay {
+      background: rgba(0, 0, 0, 0);
+    }
+    .Modal__window {
+      transform: translateY(-200px);
+    }
+  }
+  .Modal__overlay,
+  .Modal__window {
+    @extend %hidden;
+  }
+  .Modal__overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.35s;
+  }
+  .Modal__window {
+    width: 600px;
+    background: #ffffff;
+    border-radius: 5px;
+    margin: 0px auto;
+    transition: transform 0.35s ease-in;
+    transform: translateY(-200px);
+    font-size: 16px;
+
+    .Modal__body {
+      padding: 15px 16px 16px;
+      background: #f7f7f7;
+      .body__area {
+        textarea {
+          background: #ffffff;
+          padding: 10px 16px 0;
+          min-height: 120px !important;
+          width: 100% !important;
+          border: 1px solid #e0e0e0;
+          background: #fff;
+          color: #000;
+          vertical-align: top;
+          font: 14px/1.6 Verdana, Geneva, sans-serif;
+          resize: vertical;
+          &:focus {
+            outline: 0;
+            border: 1px solid #a2bfd2;
+            box-shadow: none;
+            transition: border linear 0.2s, box-shadow linear 0.2s;
+          }
+        }
+      }
+    }
+    .Modal__footer {
+      border-top: $baseBorder;
+      padding: 15px 10px;
+      display: flex;
+      justify-content: flex-end;
+      .footer__buttons {
+        button {
+          @extend %btn;
+        }
+        button:first-child{
+              background: none;
+              color: #7aa1bd;
+              border: 1px solid #7aa1bd;
+              &:hover{
+                  color: #fff;
+                  background: #7aa1bd;
+              }
+        }
+        button:last-child{
+              margin-left: 8px;
+        }
+      }
+    }
+  }
+}
