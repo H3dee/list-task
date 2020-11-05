@@ -67,13 +67,17 @@ $baseBorder: 1px solid #ccc;
     transition: background 0.35s;
   }
   .Modal__window {
-    width: 600px;
+    width: 500px;
     background: #ffffff;
     border-radius: 5px;
     margin: 0px auto;
     transition: transform 0.35s ease-in;
     transform: translateY(-200px);
     font-size: 16px;
+
+    @media (max-width: 767px){
+      width: 315px;
+    }
 
     .Modal__body {
       padding: 15px 16px 16px;
