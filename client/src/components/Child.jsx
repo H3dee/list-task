@@ -1,6 +1,7 @@
 import React from "react";
 
 const Child = (props) => {
+  
   return (
     <div className="child">   
       <div className="Comment__body">

@@ -4,7 +4,10 @@ import Form from "./Form";
 
 const Parent = (props) => {
   const [showForm, setShowForm] = useState(false);
-  const [showMore, setShowMore] = useState(false)
+  const [showMore, setShowMore] = useState({
+    limit: 2,
+    btnVisibility: false,
+  });
   const [areaContent, setAreaContent] = useState("");
 
   const changeAreaHandler = (content) => setAreaContent(content);
@@ -14,24 +17,25 @@ const Parent = (props) => {
   };
 
   const showBtnClickHandler = () => {
-    setShowMore(true);
+    if (showMore.limit <= props.childs.length)
+      setShowMore((prev) => ({ ...showMore, limit: prev.limit + 3 }));
+    else  setShowMore({ ...showMore, btnVisibility: true });
   };
 
-  
-
-  const childs = props.childs.slice(0, showMore ? props.childs.length : 2).map((child) => {
-    return (
-      <Child
-        key={String(child.id)}
-        childId={child.id}
-        childDate={child.date}
-        childContent={child.content}
-        editChild={props.editComment}
-        removeChild={props.removeComment}
-      />
-    );
-  });
-
+  const childs = props.childs
+    .slice(0, showMore.btnVisibility ? props.childs.length : showMore.limit)
+    .map((child) => {
+      return (
+        <Child
+          key={String(child.id)}
+          childId={child.id}
+          childDate={child.created_at}
+          childContent={child.content}
+          editChild={props.editComment}
+          removeChild={props.removeComment}
+        />
+      );
+    });
 
   return (
     <div className="Comment">
@@ -77,7 +81,12 @@ const Parent = (props) => {
       <div className="Comment__childs">
         {childs}
         <div className="childs__toggle">
-         {((props?.childs?.length > 2) && !showMore) && <button onClick={showBtnClickHandler}>Show more...</button>}
+          {props?.childs?.length > 2 &&
+            !showMore.btnVisibility &&
+            (showMore.limit <= props.childs.length) &&
+              (
+              <button onClick={showBtnClickHandler}>Show more...</button>
+            )}
         </div>
       </div>
     </div>

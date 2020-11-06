@@ -2,6 +2,7 @@ import React from "react";
 import Parent from "./Parent";
 
 const CommentsList = (props) => {
+
   const parents = props.comments.map((comment) => {
     return (
       <Parent

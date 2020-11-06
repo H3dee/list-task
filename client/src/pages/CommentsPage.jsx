@@ -14,17 +14,9 @@ const CommenstPage = () => {
     content: "",
     show: false,
   });
+  const [page, setPage] = useState(1);
+  const [current, setCurrent] = useState(10)
   const { loading, request } = useHttp();
-
-  const getComments = useCallback(async () => {
-    try {
-      const fetched = await request("/api/comment/all", "GET", null, {}); //?limit=5&offset=5
-      setComments(fetched.comments);
-      setAmount(fetched.amount);
-    } catch (err) {
-      console.log(err);
-    }
-  }, [request]);
 
   const changeFormHandler = (content) => setFormContent(content);
 
@@ -34,6 +26,20 @@ const CommenstPage = () => {
     () => setModal({ show: false, currentId: null, content: "" }),
     []
   );
+
+  const getComments = useCallback(async () => {
+    try {
+      const limit = 10;
+      const fetched = await request(
+        `/api/comment/all?limit=${limit}&offset=${(page - 1) * 10}`,
+        "GET"
+      );
+      setComments(fetched.comments);
+      setAmount(fetched.amount);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [request, page]);
 
   const enterHandler = useCallback(async () => {
     try {
@@ -90,7 +96,13 @@ const CommenstPage = () => {
 
   useEffect(() => {
     getComments();
-  }, [getComments]);
+  }, [getComments, page]);
+
+  const paginationItems = Array.from({ length: 10 }, (_, i) => (
+    <div className="pagination__item" key={i} onClick={() => setPage(i + 1)}>
+      {i + 1}
+    </div>
+  ));
 
   return (
     <>
@@ -116,6 +128,15 @@ const CommenstPage = () => {
                     comments={comments}
                   />
                 )}
+              </div>
+              <div className="Comments__pagination-section">
+                <div className="pagination-next ">
+                  <button >Back</button>
+                </div>
+                <div className="pagination__row">{paginationItems}</div>
+                <div className="pagination-back ">
+                  <button>Next</button>
+                </div>
               </div>
               <div className="Comments__form">
                 <div className="form__title">Leave a comment</div>
