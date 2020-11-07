@@ -16,8 +16,10 @@ router.get("/all", async (req, res) => {
     }
 
     const results = await client.query(query);
-    let amount = await client.query('SELECT COUNT(*) FROM big;');
-    amount = amount.rows[0].count
+    let amountAll = await client.query('SELECT COUNT(*) FROM big;');
+    let amountParents = await client.query('SELECT COUNT(*) FROM big WHERE parent_id IS NULL;')
+    amountAll = amountAll.rows[0].count
+    amountParents = amountParents.rows[0].count
 
     if (!results) {
       return res.json({
@@ -81,7 +83,7 @@ router.get("/all", async (req, res) => {
     });
 
 
-    res.json({ comments, amount });
+    res.json({ comments, amountAll, amountParents });
   } catch (err) {
     console.log("Get request error:", err);
     res.status(400).json({
