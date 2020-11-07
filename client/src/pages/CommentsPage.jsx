@@ -7,7 +7,8 @@ import "../scss/Comments.scss";
 
 const CommenstPage = () => {
   const [comments, setComments] = useState([]);
-  const [amount, setAmount] = useState(0);
+  const [amountAll, setAmountAll] = useState(0);
+  const [amountParents, setAmountParents] = useState(0);
   const [formContent, setFormContent] = useState("");
   const [modal, setModal] = useState({
     currentId: null,
@@ -15,7 +16,7 @@ const CommenstPage = () => {
     show: false,
   });
   const [page, setPage] = useState(1);
-  const [current, setCurrent] = useState(10)
+  const [currentPages, setCurrentPages] = useState(10);
   const { loading, request } = useHttp();
 
   const changeFormHandler = (content) => setFormContent(content);
@@ -35,7 +36,8 @@ const CommenstPage = () => {
         "GET"
       );
       setComments(fetched.comments);
-      setAmount(fetched.amount);
+      setAmountAll(fetched.amountAll);
+      setAmountParents(fetched.amountParents);
     } catch (err) {
       console.log(err);
     }
@@ -98,11 +100,29 @@ const CommenstPage = () => {
     getComments();
   }, [getComments, page]);
 
-  const paginationItems = Array.from({ length: 10 }, (_, i) => (
-    <div className="pagination__item" key={i} onClick={() => setPage(i + 1)}>
-      {i + 1}
-    </div>
-  ));
+  const paginationItems = Array.from(
+    {
+      length:
+        Math.round(amountParents / 10) + 1 < currentPages
+          ? amountParents % 10 < 3
+            ? (amountParents % 10) + 3
+            : amountParents % 10
+          : 10,
+    },
+    (_, i) => (
+      <div
+        className={
+          page === currentPages - 10 + (i + 1)
+            ? "pagination__item active"
+            : "pagination__item"
+        }
+        key={i}
+        onClick={() => setPage(currentPages - 10 + (i + 1))}
+      >
+        {currentPages - 10 + (i + 1)}
+      </div>
+    )
+  );
 
   return (
     <>
@@ -114,13 +134,13 @@ const CommenstPage = () => {
               <div className="head__title">
                 Comments:
                 <span id="total" className="head__count">
-                  {amount}
+                  {amountAll}
                 </span>
               </div>
             </div>
             <div className="Comments">
               <div className="Comments__content">
-                {!loading && (
+                {!loading && comments.length !== 0 && (
                   <CommentsList
                     edit={editHandler}
                     send={sendHandler}
@@ -128,14 +148,43 @@ const CommenstPage = () => {
                     comments={comments}
                   />
                 )}
+                {comments.length === 0 && (
+                  <div className="content__alert">
+                    There are no comments yet...
+                  </div>
+                )}
               </div>
               <div className="Comments__pagination-section">
-                <div className="pagination-next ">
-                  <button >Back</button>
-                </div>
-                <div className="pagination__row">{paginationItems}</div>
                 <div className="pagination-back ">
-                  <button>Next</button>
+                  <button
+                    onClick={() =>
+                      currentPages !== 10 && setCurrentPages(currentPages - 10)
+                    }
+                    disabled={currentPages === 10}
+                  >
+                    Back
+                  </button>
+                </div>
+                <div className="pagination__row">
+                  {currentPages > 20 && (
+                    <div
+                      className="pagination__item"
+                      onClick={() => {
+                        setCurrentPages(10);
+                      }}
+                    >
+                      1 ...
+                    </div>
+                  )}
+                  {paginationItems}
+                </div>
+                <div className="pagination-next ">
+                  <button
+                    disabled={Math.round(amountParents / 10) + 1 < currentPages}
+                    onClick={() => setCurrentPages(currentPages + 10)}
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
               <div className="Comments__form">

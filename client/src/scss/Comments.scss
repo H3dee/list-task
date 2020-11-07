@@ -106,6 +106,10 @@ $mainCol: #548eaa;
         .Comments__content {
           display: flex;
           flex-direction: column;
+          .content__alert{
+            font-size: 20px;
+            text-align: center;
+          }
           .Comment {
             margin: 10px 0;
             display: flex;
@@ -196,15 +200,14 @@ $mainCol: #548eaa;
         }
         .Comments__pagination-section {
           $itemCol: #4d80aa;
-          margin: 25px 0px 15px 0px;
+          margin: 45px 0px 15px 0px;
           display: flex;
           align-items: center;
-          justify-content: center;
           button{
             font-size: 15px;
             font-weight: 500;
             letter-spacing: 1px;
-            opacity: 0.5;
+            opacity: 0.6;
             background: none;
             transition: opacity 0.1s ease-in;
             &:hover{
@@ -214,7 +217,7 @@ $mainCol: #548eaa;
           .pagination__row {
             display: inline-flex;
             flex-wrap: wrap;
-            justify-content: center;
+            justify-content: flex-start;
             border: 1px solid #d5dddf;
             border-radius: 3px;
             margin: 0px 19px;
